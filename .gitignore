@@ -1,0 +1,13 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+automl_venv/
+
+# Other files and folders that should be ignored
+*.log
+.db
