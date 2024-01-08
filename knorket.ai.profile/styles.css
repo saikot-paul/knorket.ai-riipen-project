@@ -1,0 +1,44 @@
+body { 
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1, h2 { 
+    text-align: center;
+    font-weight: normal;
+}
+.container { 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+}
+.file-container  { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.file-container { 
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container { 
+    display: flex;
+    justify-content: center;
+}
+
+.task-container { 
+    display: flex;
+    gap: 1rem;
+}
+
+.iframe-container { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

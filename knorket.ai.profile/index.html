@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profiling and ML</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Knorket.ai</h1>
+        <div class="file-container">
+            <h2>Please enter a csv file that you would like to be processed</h2>
+            <div class="button-container">
+                <input type="file" id="fileInput" accept=".csv">
+                <button id="fileUpload">Click me to check columns</button>
+            </div>
+        </div>
+        <div class="task-container">
+            <div class="dropdown-menu">
+                <label for="targetColumn">Select Target Column:</label>
+                <select id="targetColumn"></select>
+            </div>
+            <div class="dropdown-menu">
+                <label for="taskType">Select Task:</label>
+                <select id="taskType">
+                    <option value="classification">classification</option>
+                    <option value="regression">regression</option>
+                </select>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="profileData">Profile Data</button>
+            <button id="autoML">Run AutoML</button>
+        </div>
+        <div class="iframe-container">
+            <h2>Profiling Data</h2>
+            <div id="iframe-profile"></div>
+        </div>
+        <div class="iframe-container">
+            <h2>AutoML Data</h2>
+            <div id="iframe-automl"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fileUpload').addEventListener('click', function() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var contents = e.target.result;
+                    var lines = contents.split('\n');
+                    var headers = lines[0].split(/,|;/);
+                    populateDropdown(headers);
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a file.');
+            }
+        });
+
+        function populateDropdown(headers) {
+            var dropdown = document.getElementById('targetColumn');
+            dropdown.innerHTML = '';
+            headers.forEach(function(header) {
+                var option = document.createElement('option');
+                option.value = header;
+                option.text = header;
+                dropdown.appendChild(option);
+            });
+        }
+
+        document.getElementById('profileData').addEventListener('click', function() {
+            
+            event.preventDefault()
+            
+            var fileInput = document.getElementById('fileInput');
+            var targetColumn = document.getElementById('targetColumn').value;
+            var taskType = document.getElementById('taskType').value;
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('http://localhost:5173/profile', {
+            method: 'POST',
+            body: formData,
+            })
+            .then(response => response.json())  // Assuming the response is JSON
+            .then(data => {
+                var iframeContainer = document.getElementById('iframe-profile');
+                iframeContainer.innerHTML = ''; // Clear previous content
+                var iframe = document.createElement('iframe');
+                iframe.style.width = '90rem';
+                iframe.style.height = '45rem';
+                iframe.srcdoc = data.iframe; // Set the iframe content
+                iframeContainer.appendChild(iframe); // Add the iframe to the container
+            });
+        });
+        
+        document.getElementById('autoML').addEventListener('click', function() {
+            
+            
+            var fileInput = document.getElementById('fileInput');
+            var targetColumn = document.getElementById('targetColumn').value;
+            var taskType = document.getElementById('taskType').value;
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('task', taskType)
+            formData.append('target', targetColumn)
+
+            console.log(taskType)
+            console.log(targetColumn)
+
+            fetch('http://localhost:8080/automl', {
+            method: 'POST',
+            body: formData,
+            })
+            .then(response => response.json())  // Assuming the response is JSON
+            .then(data => {
+                var iframeContainer = document.getElementById('iframe-automl');
+                iframeContainer.innerHTML = ''; // Clear previous content
+                var iframe = document.createElement('iframe');
+                iframe.style.width = '90rem';
+                iframe.style.height = '45rem';
+                iframe.srcdoc = data.iframe; // Set the iframe content
+                iframeContainer.appendChild(iframe); // Add the iframe to the container
+            });
+        }); 
+
+    </script>
+</body>
+</html>
