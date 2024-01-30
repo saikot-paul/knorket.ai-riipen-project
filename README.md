@@ -1,0 +1,1 @@
+Created 2 APIs, one does automatic profiling and EDA, the other performs analytics using machine learning depending on user's input. I used static HTML for displaying the functionality of the APIs. This project was built with FastAPI, AutoML, Evidently, YDataProfiling, HTNL/CSS
